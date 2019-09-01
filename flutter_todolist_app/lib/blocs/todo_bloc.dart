@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_todolist_app/bases/base_bloc.dart';
 import 'package:flutter_todolist_app/bases/base_event.dart';
-import 'package:flutter_todolist_app/database/todo_table.dart';
 import 'package:flutter_todolist_app/events/add.dart';
 import 'package:flutter_todolist_app/events/delete.dart';
 import 'package:flutter_todolist_app/models/todo.dart';
+import 'package:flutter_todolist_app/repo/todo_repo.dart';
 
 class ToDoBloc extends BaseBloc {
-  ToDoTable _toDoTable = ToDoTable();
+  TodoRepo _todoRepo = TodoRepo();
 
   StreamController<List<Todo>> _todoListStreamController =
       StreamController<List<Todo>>();
@@ -20,17 +20,13 @@ class ToDoBloc extends BaseBloc {
   List<Todo> _todoListData = List<Todo>();
 
   initData() async {
-    _todoListData = await _toDoTable.selectAllTodo();
-    if (_todoListData == null) {
-      return;
-    }
-
+    _todoListData = await _todoRepo.selectAllTodo();
     _todoListStreamController.sink.add(_todoListData);
   }
 
   _addToDo(Todo todo) async {
     // insert to database
-    await _toDoTable.insertToDo(todo);
+    await _todoRepo.insertTodo(todo);
 
     _todoListData.add(todo);
     _todoListStreamController.sink.add(_todoListData);
@@ -38,7 +34,7 @@ class ToDoBloc extends BaseBloc {
 
   _deleteToDo(Todo todo) async {
     // delete to database
-    await _toDoTable.deleteToDo(todo);
+    await _todoRepo.deleteTodo(todo);
 
     _todoListData.remove(todo);
     _todoListStreamController.sink.add(_todoListData);

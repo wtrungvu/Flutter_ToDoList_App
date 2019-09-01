@@ -11,6 +11,15 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    var bloc = Provider.of<ToDoBloc>(context);
+    bloc.initData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<ToDoBloc>(
       builder: (context, bloc, child) => StreamBuilder<List<Todo>>(
@@ -42,19 +51,19 @@ class _BodyState extends State<Body> {
                   );
                 },
               );
-            case ConnectionState.none:
+            case ConnectionState.waiting:
               return Center(
                 child: Text(
-                  "Not connected to the Stream or null",
+                  "Emty",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
                 ),
               );
-            case ConnectionState.waiting:
+            case ConnectionState.none:
               return Center(
                 child: Text(
-                  "Emty",
+                  "Not connected to the Stream or null",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),

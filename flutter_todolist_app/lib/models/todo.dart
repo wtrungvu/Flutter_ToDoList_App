@@ -18,4 +18,11 @@ class Todo {
   set id(int value) {
     _id = value;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': _id,
+      'content': _content,
+    };
+  }
 }
